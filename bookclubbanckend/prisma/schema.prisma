@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model members {
+  id         Int          @id @default(autoincrement()) 
+  name       String          @db.VarChar(255)
+  gender     members_gender?
+  birth_date DateTime        @db.Date
+  banned     Boolean         @default(false)
+  created_at DateTime?       @db.Timestamp(0)
+  updated_at DateTime?       @db.Timestamp(0)
+  payment payment[]
+}
+
+enum members_gender {
+  M
+  F
+}
+
+model payment{
+  id Int @id @default(autoincrement())
+  member_id Int
+  members members @relation(references: [id], fields: [member_id])
+  amount Int
+  paid_at DateTime
+
+}
